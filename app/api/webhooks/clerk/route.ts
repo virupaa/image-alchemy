@@ -65,8 +65,8 @@ export async function POST(req: Request) {
       clerkId: id,
       email: email_addresses[0].email_address,
       username: username!,
-      firstName: first_name,
-      lastName: last_name,
+      firstName: first_name || '',
+      lastName: last_name || '',
       photo: image_url,
     };
 
@@ -88,9 +88,10 @@ export async function POST(req: Request) {
   if (eventType === "user.updated") {
     const { id, image_url, first_name, last_name, username } = evt.data;
 
+    // Ensure that null values are converted to empty strings for firstName and lastName
     const user = {
-      firstName: first_name,
-      lastName: last_name,
+      firstName: first_name || '', // Convert null to empty string
+      lastName: last_name || '',   // Convert null to empty string
       username: username!,
       photo: image_url,
     };
@@ -98,7 +99,8 @@ export async function POST(req: Request) {
     const updatedUser = await updateUser(id, user);
 
     return NextResponse.json({ message: "OK", user: updatedUser });
-  }
+}
+
 
   // DELETE
   if (eventType === "user.deleted") {
